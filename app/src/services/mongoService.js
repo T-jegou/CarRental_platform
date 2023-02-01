@@ -1,0 +1,47 @@
+const mongoose = require('mongoose');
+const { logger } = require('./loggerService')
+require('dotenv').config()
+
+if (!process.env.MONGO_HOST) throw new Error("HOST is not defined")
+if (!process.env.MONGO_PORT) throw new Error("PORT is not defined")
+if (!process.env.MONGO_USER) throw new Error("USERNAME is not defined")
+if (!process.env.MONGO_PASSWORD) throw new Error("PASSWORD is not defined")
+if (!process.env.MONGO_DB) throw new Error("DATABASE is not defined")
+
+// environment variables
+const MONGO_CONTAINER_NAME = process.env.MONGO_HOST || 'localhost';
+const MONGO_URI = `mongodb://${MONGO_CONTAINER_NAME}:${process.env.MONGO_PORT}/${process.env.MONGO_DB}`;
+
+
+/**
+ * Connect to MongoDB wit Mongoose
+ */
+const mongoConnect = () => {
+    mongoose.Promise = global.Promise;
+    mongoose.connect(MONGO_URI, {
+    }, (err) => {  
+        if(err) {
+            logger.log('fatal', err);
+            logger.log('trace', err.stack);
+        }
+    });
+    mongoose.set('strictQuery', false);
+    mongoose.connection.on('connected', function () {  
+        logger.log('info',`Mongoose - connection established at ${MONGO_URI}`);
+    }); 
+    
+    // If the connection throws an error
+    mongoose.connection.on('error',function (err) {  
+        logger.log('fatal',`Mongoose - connection error: ${MONGO_URI}`);
+    }); 
+    
+    // When the connection is disconnected
+    mongoose.connection.on('disconnected', function () {  
+        logger.log('fatal',`Mongoose - disconnected: ${MONGO_URI}`);
+    });
+}
+  
+
+module.exports = {
+    mongoConnect: mongoConnect
+}
