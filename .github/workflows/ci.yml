@@ -7,7 +7,7 @@ jobs:
   unit_lint_load_test:
     runs-on: ubuntu-latest
     services:
-      postgres:
+      mongo:
           image: mongo:focal
           env:
               MONGO_USER: ${{ secrets.MONGO_USER }}
