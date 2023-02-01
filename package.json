@@ -4,7 +4,7 @@
   "description": "Agent platform service for car rental agency",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"Error: no test specified\"",
     "lint": "eslint .",
     "start": "node app/index.js localhost 4000",
     "dev": "nodemon app/index.js localhost 4000"
