@@ -14,7 +14,7 @@ jobs:
           MONGO_DB: ${{ secrets.MONGO_DB }}
           MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
         ports:
-            - ${{ secrets.MONGO_PORT }}:27017
+            - ${{ secrets.MONGO_PORT }}
     steps:
 
     - name: Display workflow infos
