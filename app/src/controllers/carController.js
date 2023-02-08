@@ -141,18 +141,14 @@ const CreateReservationFromAgency = async (req, res) => {
     }
    
     const car = await isCarIdValid(req.body.carID);
-    console.log(car);
     if (car === null) {
-        console.log("Cannot find this car");
         res.status(401).json("Cannot find this car");
         return false;
 
     }
 
     const availability = await isCarAvailable(req.body.carID, req.body.startDate, req.body.endDate);
-    console.log(availability);
     if (!availability) {
-        console.log("This car is not available");
         res.status(401).json("This car is not available");
         return false;
 
