@@ -63,7 +63,6 @@ async function isCarIdValid(carID) {
     // Convertir la différence en jours
     var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
   
-    console.log(typeof(diffDays));
     return diffDays;
   }
 
@@ -86,8 +85,6 @@ async function isCarIdValid(carID) {
             return true;
         }
         for (let i = 0; i < reservation.length; i++) {
-            console.log(reservation[i].startDate, reservation[i].endDate);
-            console.log(newResStartDate, newResEndDate);
             if ((newResStartDate >= reservation[i].startDate && newResStartDate <= reservation[i].endDate)
                 || (newResEndDate >= reservation[i].startDate && newResEndDate <= reservation[i].endDate)
                 || (newResStartDate <= reservation[i].startDate && newResEndDate >= reservation[i].endDate)) {
