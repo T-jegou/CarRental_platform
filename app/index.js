@@ -3,8 +3,8 @@ const { logger } = require('./src/services/loggerService')
 const SLEEP_TIME = process.env.SLEEP_TIME || 1000;
 
 // sleep till MongoDB and RabbitMQ services start
-logger.info(`Sleeping for ${SLEEP_TIME}ms before connecting to MongoDB and RabbitMQ.`)
+logger.info(`Sleeping for ${SLEEP_TIME}ms before connecting to MongoDB`)
 setTimeout(() => {
     startServer();
-    logger.info(`agent-service started`)
+    logger.info(`Car rental platform started`)
 }, SLEEP_TIME)
