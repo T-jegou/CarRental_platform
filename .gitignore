@@ -16,6 +16,9 @@ lerna-debug.log*
 # Env vars
 .env
 
+
+# Docker 
+docker
 # Package-lock.json
 # package-lock.json is a security risk when used as an application dependency.
 # It exposes your code to attacks from malicious packages.
