@@ -29,8 +29,8 @@ var assert = require('assert');
 
 
 chai.use(chaiHttp);
-//Our parent block
-describe('Books', () => {
+
+describe('Register Agent', () => {
     beforeEach((done) => { //Before each test we empty the database
         Car.deleteMany({}, (err) => {
             if (err) {
@@ -76,16 +76,18 @@ describe('Books', () => {
 
 });
 
+
 describe('Add car to catalog', () => {
+    beforeEach(async () =>{
+        await deleteAllAgents();
+        await deleteAllCars();
+        await deleteAllUsers();
+        await createFakeAgents();
+        await createFakeCars();
+        await createFakeUsers();
+    });
   it('should add a car to the catalog', async () => {
     
-    await deleteAllAgents();
-    await deleteAllCars();
-    await deleteAllUsers();
-    await createFakeAgents();
-    await createFakeCars();
-    await createFakeUsers();
-
     const response = await request(app)
       .post('/api/car/catalog')
       .send({
@@ -105,31 +107,104 @@ describe('Add car to catalog', () => {
     expect(response.body["numberOfSeat"]).to.equal(5)
    
   });
-});
 
-// /*
-//   * Test the /GET route
-//   */
-//   describe('/GET Cars', () => {
-//       it('it should GET all the books', (done) => {
-//         chai.request(server)
-//             .get('/api/car/catalog')
-//             .end((err, res) => {
-//                   res.should.have.status(200);
-//                   res.body.should.be.a('array');
-//                   res.body.length.should.be.eql(0);
-//               done();
-//             });
-//       });
+  it('Create reservation from agency', async () => {
+    const response_car = await request(app)
+      .post('/api/car/catalog')
+      .send({
+        email: 'agent1@car.com',
+        password: '123456',
+        brand: 'Citroen',
+        model: 'C4',
+        numberOfSeat: '5',
+        pricePerDay: '80',
+        available: true
+  }).set('Accept', 'application/json');
+
+   
+
+    const response = await request(app)
+      .post('/api/car/reservation')
+      .send({
+        email: "agent1@car.com",
+        password: "123456",
+        carID : response_car.body["_id"],
+        customerEmail: "john@test.com",
+        startDate : "2020-04-24",
+        endDate : "2020-05-4",
+        paymentStatus : "Paid" ,
+        paymentMethod : "Cash",
+        ReservationStatus : "In progress"
+    }).set('Accept', 'application/json');
+
+    expect(response.statusCode).to.equal(201);
+    expect(response.body["carID"]).to.equal(response_car.body["_id"]);
+    expect(response.body["paymentStatus"]).to.equal("Paid");
+    expect(response.body["ReservationStatus"]).to.equal("In progress");
+   
+  });
+
+//   it('If client is registered', async () => {
+
+//     const response = await request(app)
+//       .get('/api/customer/isClient')
+//       .send({
+//         email: "agent1@car.com",
+//         password: "123456",
+//         customerEmail: "agent1@car.com"
+    
+//     }).set('Accept', 'application/json');
+  
+
+//     expect(response.statusCode).to.equal(201);
+   
 //   });
 
-// });
+  it('if car is available', async () => {
+    const response_car = await request(app)
+      .post('/api/car/catalog')
+      .send({
+        email: 'agent1@car.com',
+        password: '123456',
+        brand: 'Citroen',
+        model: 'C4',
+        numberOfSeat: '5',
+        pricePerDay: '80',
+        available: true
+  }).set('Accept', 'application/json');
+   
+
+    const response = await request(app)
+      .get('/api/car/availability')
+      .send({
+        email: "agent1@car.com",
+        password: "123456",
+        carID : response_car.body["_id"],
+     startDate : "2022-04-24",
+        endDate : "2022-05-4"
+    }).set('Accept', 'application/json');
+  
+
+    expect(response.statusCode).to.equal(200);
+   
+  });
+
+  it('Get Catalog', async () => {
+
+    const response = await request(app)
+      .get('/api/car/catalog')
+      .send({
+        "email": "agent1@car.com",
+        "password": "123456"
+    }).set('Accept', 'application/json');
+  
+
+    expect(response.statusCode).to.equal(200);
+   
+  });
+
+
+});
 
 
 
-// Must test this :
-// AddCarToCalatog: AddCarToCalatog,
-// CheckIfClientIsRegistred: CheckIfClientIsRegistred,
-// CreateReservationFromAgency: CreateReservationFromAgency,
-// isThisCarAvaible: isThisCarAvaible,
-// getCatalog: getCatalog
