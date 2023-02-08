@@ -11,16 +11,19 @@ let User = mongoose.model('User', userSchema);
 const {agentSchema} = require('../app/src/models/Agent');
 let Agent = mongoose.model('Agent', agentSchema);
 
+const request = require('supertest');
+
 const {hashPassword} = require ('../app/src/lib/tools');
 
-//Require the dev-dependencies
+const { createFakeCars, createFakeAgents, deleteAllCars, deleteAllAgents, createFakeUsers, deleteAllUsers } = require('../app/src/lib/tools');
+const expect = require('chai').expect;
+
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 
 
 const { app } = require('../app/src/app');
-let server = app
-let should = chai.should();
+
 
 var assert = require('assert');
 
@@ -71,6 +74,37 @@ describe('Books', () => {
         assert.equal(retrieveAgent.name, "John");
     });
 
+});
+
+describe('Add car to catalog', () => {
+  it('should add a car to the catalog', async () => {
+    
+    await deleteAllAgents();
+    await deleteAllCars();
+    await deleteAllUsers();
+    await createFakeAgents();
+    await createFakeCars();
+    await createFakeUsers();
+
+    const response = await request(app)
+      .post('/api/car/catalog')
+      .send({
+        email: 'agent1@car.com',
+        password: '123456',
+        brand: 'Citroen',
+        model: 'C4',
+        numberOfSeat: '5',
+        pricePerDay: '80',
+        available: true
+  }).set('Accept', 'application/json');
+  
+
+    expect(response.statusCode).to.equal(201);
+    expect(response.body["brand"]).to.equal("Citroen")
+    expect(response.body["model"]).to.equal("C4")
+    expect(response.body["numberOfSeat"]).to.equal(5)
+   
+  });
 });
 
 // /*
