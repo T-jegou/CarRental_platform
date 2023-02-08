@@ -4,23 +4,27 @@
   "description": "Agent platform service for car rental agency",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "./node_modules/.bin/eslint .",
-    "start": "node app/index.js localhost 4000",
-    "dev": "nodemon app/index.js localhost 4000"
+    "test": "NODE_ENV=test mocha --recursive test/ --exit --async-stack-traces --full-trace",
+    "lint": "eslint .",
+    "start": "node app/src/app.js localhost 4000",
+    "dev": "NODE_ENV=test nodemon app/src/app.js localhost 4000"
   },
   "author": "T-jegou",
   "license": "ISC",
   "dependencies": {
     "amqplib": "^0.10.3",
+    "chai": "^4.3.7",
+    "chai-http": "^4.3.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "mocha": "^10.2.0",
     "mongoose": "^6.8.0",
     "morgan": "^1.10.0",
     "winston": "^3.8.2"
   },
   "devDependencies": {
     "bcrypt": "^5.1.0",
+    "eslint": "^8.33.0",
     "express-validator": "^6.14.2",
     "nodemon": "^2.0.20"
   }
