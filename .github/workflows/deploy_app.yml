@@ -93,7 +93,7 @@ jobs:
       run: terraform apply -auto-approve -input=false
     
     - name: Terraform Apply
-      if: github.ref == 'refs/heads/release/**' && github.event_name == 'push'
+      if: startsWith(github.ref, 'refs/heads/release/') && github.event_name == 'push'
       run: terraform apply -auto-approve -input=false
 
     
