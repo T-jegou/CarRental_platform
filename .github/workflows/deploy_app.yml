@@ -48,7 +48,7 @@ jobs:
     
     - name: Terraform select workspace
       if: startsWith(github.ref, 'refs/pull/')
-      run: terraform workspace select preprod
+      run: terraform workspace select prod
       
     - name: Terraform Validate
       id: validate
