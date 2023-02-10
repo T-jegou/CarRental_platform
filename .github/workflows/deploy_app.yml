@@ -29,18 +29,20 @@ jobs:
       id: fmt
       run: terraform fmt -check
 
-    - name: Terraform Init
+    - name: Terraform init
       id: init
       run: terraform init
+      env:
+        TF_WORKSPACE : preprod
       continue-on-error: true
 
     - name: Terraform select workspace
       if: github.ref == 'refs/heads/main'
-      run: terraform workspace select CarRental-prod
+      run: terraform workspace select prod
     
     - name: Terraform select workspace
       if: github.ref == 'refs/heads/release/**'
-      run: terraform workspace select CarRental-preprod
+      run: terraform workspace select preprod
       
     - name: Terraform Validate
       id: validate
