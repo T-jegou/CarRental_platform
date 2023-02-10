@@ -32,6 +32,7 @@ jobs:
     - name: Terraform Init
       id: init
       run: terraform init
+      continue-on-error: true
 
     - name: Terraform select workspace
       if: github.ref == 'refs/heads/main'
