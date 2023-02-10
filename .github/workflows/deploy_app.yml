@@ -5,6 +5,8 @@ on:
       - main
       - release/**
   pull_request:
+    branches:
+      - main
 
 jobs:
   terraform:
@@ -43,6 +45,10 @@ jobs:
     - name: Terraform select workspace
       if: startsWith(github.ref, 'refs/heads/release/')
       run: terraform workspace select preprod
+    
+    - name: Terraform select workspace
+      if: github.event == 'pull_request'
+      run: terraform workspace select prod
       
     - name: Terraform Validate
       id: validate
