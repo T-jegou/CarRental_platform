@@ -34,12 +34,10 @@ jobs:
       run: terraform init
 
     - name: Terraform select workspace
-      id: workspace
       if: github.ref == 'refs/heads/main'
       run: terraform workspace select prod
     
     - name: Terraform select workspace
-      id: workspace
       if: github.ref == 'refs/heads/release/**'
       run: terraform workspace select preprod
       
@@ -63,7 +61,6 @@ jobs:
         script: |
           const output = `#### Terraform Format, Workspace and Style 🖌\`${{ steps.fmt.outcome }}\`
           #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-          #### Terraform Workspace ⚙️\`${{ steps.workspace.outcome }}\`
           #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
           #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
 
