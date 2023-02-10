@@ -31,31 +31,13 @@ var assert = require('assert');
 chai.use(chaiHttp);
 
 describe('Register Agent', () => {
-    beforeEach((done) => { //Before each test we empty the database
-        Car.deleteMany({}, (err) => {
-            if (err) {
-                console.log(err)
-            }
-        });
-
-        User.deleteMany({}, (err) => {
-            if (err) {
-                console.log(err)
-            }
-        });
-        
-        Agent.deleteMany({}, (err) => {
-            if (err) {
-                console.log(err)
-            }
-        });
-        
-        Reservation.deleteMany({}, (err) => {
-            if (err) {
-                console.log(err)
-            }
-            done();
-        });
+    beforeEach(async () => { //Before each test we empty the database
+      await deleteAllAgents();
+      await deleteAllCars();
+      await deleteAllUsers();
+      await createFakeAgents();
+      await createFakeCars();
+      await createFakeUsers();
     });
 
     it('should regiter an Agent', async function () {
