@@ -1,0 +1,48 @@
+name: Run continuous integration test
+
+on:
+  push:
+    branches:
+      - 'dev'
+
+jobs:
+  unit_lint_load_test_quality:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: 'Create env file'
+      run: |
+        echo "${{ secrets.ENV_FILE }}" > .env
+
+    - name: Run testing databse
+      run: |
+        docker-compose up -d
+
+    - name: Display workflow infos
+      run: |
+        echo The job_id is: $GITHUB_JOB
+        echo "The id of this action is: $GITHUB_ACTION"
+        echo "The run id is: $GITHUB_RUN_ID"
+        echo "The GitHub Actor's username is: $GITHUB_ACTOR"
+
+    - name: Setup NodeJS
+      uses: actions/setup-node@v3
+      with:
+          node-version: '16'
+
+    - name: Initialise the project
+      run: npm install
+
+    - name: Check project syntax with ESLINT
+      run: npm run lint
+
+    - name: Run unit test with MochaJS
+      run: npm run test
+
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
