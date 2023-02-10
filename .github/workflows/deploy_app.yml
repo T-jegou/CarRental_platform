@@ -21,11 +21,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
     
-    - name: Echo refs
-      run: |
-        echo '${{ github.event.ref }}'
-        echo '${{ github.ref }}'
-
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
       with:
@@ -52,8 +47,8 @@ jobs:
       run: terraform workspace select preprod
     
     - name: Terraform select workspace
-      if: github.event == 'pull_request'
-      run: terraform workspace select prod
+      if: startsWith(github.ref, 'refs/pull/')
+      run: terraform workspace select preprod
       
     - name: Terraform Validate
       id: validate
