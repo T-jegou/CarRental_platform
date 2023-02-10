@@ -1,7 +1,7 @@
 terraform {
   backend "remote" {
-    hostname      = "app.terraform.io"
-    organization  = "ekipDevops"
+    hostname     = "app.terraform.io"
+    organization = "ekipDevops"
 
     workspaces {
       prefix = "CapRental-"
@@ -10,7 +10,7 @@ terraform {
 
   required_providers {
     aws = {
-      source  = "hashicorp/aws"
+      source = "hashicorp/aws"
     }
   }
 }
