@@ -5,6 +5,8 @@ on:
       - main
       - release/**
   pull_request:
+    branches:
+      - main
 
 jobs:
   terraform:
@@ -18,7 +20,7 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-
+    
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
       with:
@@ -41,7 +43,11 @@ jobs:
       run: terraform workspace select prod
     
     - name: Terraform select workspace
-      if: github.ref == 'refs/heads/release/**'
+      if: startsWith(github.ref, 'refs/heads/release/')
+      run: terraform workspace select preprod
+    
+    - name: Terraform select workspace
+      if: startsWith(github.ref, 'refs/pull/')
       run: terraform workspace select preprod
       
     - name: Terraform Validate
@@ -93,7 +99,7 @@ jobs:
       run: terraform apply -auto-approve -input=false
     
     - name: Terraform Apply
-      if: github.ref == 'refs/heads/release/**' && github.event_name == 'push'
+      if: startsWith(github.ref, 'refs/heads/release/') && github.event_name == 'push'
       run: terraform apply -auto-approve -input=false
 
     
