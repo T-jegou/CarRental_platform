@@ -36,11 +36,11 @@ jobs:
 
     - name: Terraform select workspace
       if: github.ref == 'refs/heads/main'
-      run: terraform workspace select prod
+      run: terraform workspace select CarRental-prod
     
     - name: Terraform select workspace
       if: github.ref == 'refs/heads/release/**'
-      run: terraform workspace select preprod
+      run: terraform workspace select CarRental-preprod
       
     - name: Terraform Validate
       id: validate

@@ -4,7 +4,7 @@ terraform {
     organization = "ekipDevops"
 
     workspaces {
-      prefix = "CapRental-"
+      prefix = "CarRental-"
     }
   }
 
