@@ -3,6 +3,22 @@
 
 .vscode/
 
+
+### Infrasrructure ###
+# Terraform
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.*
+.terraform/
+terraform.tfstate.backup
+terraform.tfstate.lock.info
+
+# Ansible
+*.retry
+
+
+
 ### Node ###
 # Logs
 logs
