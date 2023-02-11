@@ -1,12 +1,13 @@
-name: "deploy_app"
+name: update_infrastructure_and_deploy_app
 on:
   push:
     branches:
       - main
-      - release/**
+      - dev
   pull_request:
     branches:
       - main
+      - dev
 
 jobs:
   terraform:
@@ -38,28 +39,38 @@ jobs:
         TF_WORKSPACE : preprod
       continue-on-error: true
 
+    # Push on main (apply modif on prod)
     - name: Terraform select workspace
       if: github.ref == 'refs/heads/main'
       run: terraform workspace select prod
-    
+
+    # Push on dev (apply modif on preprod)
     - name: Terraform select workspace
-      if: startsWith(github.ref, 'refs/heads/release/')
+      if: github.ref == 'refs/heads/dev'
       run: terraform workspace select preprod
     
+    # PR from feature to dev (must plan on preprod env)
     - name: Terraform select workspace
-      if: startsWith(github.ref, 'refs/pull/')
+      if: startsWith(github.event.pull_request.head.ref, 'feature/')
+      run: terraform workspace select preprod
+
+    # PR from dev to main (must plan on prod env)
+    - name: Terraform select workspace
+      if: github.event.pull_request.head.ref == 'dev' && github.event.pull_request.base.ref == 'main'
       run: terraform workspace select prod
-      
+
     - name: Terraform Validate
       id: validate
       run: terraform validate -no-color
     
+    # In case of PR , we plan to check if the prod or preprod is ready to accepts new modifs
     - name: Terraform Plan
       id: plan
       if: github.event_name == 'pull_request'
       run: terraform plan -no-color -input=false
       continue-on-error: true
 
+    # Github action bot comment PR 
     - name: Update Pull Request
       uses: actions/github-script@v6
       if: github.event_name == 'pull_request'
@@ -94,12 +105,14 @@ jobs:
       if: steps.plan.outcome == 'failure'
       run: exit 1
 
-    - name: Terraform Apply
+    # Apply modif when PR is closed or when push directly on main
+    - name: Terraform Apply (prod)
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: terraform apply -auto-approve -input=false
     
-    - name: Terraform Apply
-      if: startsWith(github.ref, 'refs/heads/release/') && github.event_name == 'push'
+    # Apply modif when PR is closed on when push directly on dev
+    - name: Terraform Apply (preprod)
+      if: github.ref == 'refs/heads/dev' && github.event_name == 'push'
       run: terraform apply -auto-approve -input=false
 
     

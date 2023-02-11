@@ -8,10 +8,7 @@ if (!process.env.MONGO_INITDB_USERNAME) throw new Error("USERNAME is not defined
 if (!process.env.MONGO_INITDB_PASSWORD) throw new Error("PASSWORD is not defined")
 if (!process.env.MONGO_INITDB_DATABASE) throw new Error("DATABASE is not defined")
 
-// environment variables
-const MONGO_CONTAINER_NAME = process.env.MONGO_HOST || 'localhost';
-// mongoose.connect('mongodb://username:password@host:port/database?options...');
-// const MONGO_URI = `mongodb://${MONGO_CONTAINER_NAME}:${process.env.MONGO_PORT}/${process.env.MONGO_DB}`;
+
 const MONGO_URI = `mongodb://${process.env.MONGO_INITDB_USERNAME}:${process.env.MONGO_INITDB_PASSWORD}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_INITDB_DATABASE}`;
 
 
