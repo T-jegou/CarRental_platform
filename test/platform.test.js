@@ -52,7 +52,7 @@ describe('Register Agent', () => {
         newAgent = new Agent(newAgent);
         await newAgent.save();
 
-        retrieveAgent = await Agent.findOne({email: "agent1@test.com"});
+        let retrieveAgent = await Agent.findOne({email: "agent1@test.com"});
         assert.equal(retrieveAgent.name, "John");
     });
 
