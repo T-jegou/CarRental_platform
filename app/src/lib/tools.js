@@ -80,7 +80,7 @@ async function isCarIdValid(carID) {
             return false;
         }
 
-        let reservation = await Reservation.find({carID: carId});
+        let reservation = await Reservation.find({carID: {$eq: carId}});
         if (reservation.length === 0) {
             return true;
         }
