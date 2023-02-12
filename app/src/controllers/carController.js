@@ -134,7 +134,7 @@ const CreateReservationFromAgency = async (req, res) => {
         return false;
     }
 
-    const customer = await Customer.findOne({email: req.body.customerEmail});
+    const customer = await Customer.find({email: req.body.customerEmail});
     if (customer === null) {
         res.status(401).json("Cannot find this customer");
         return false;
@@ -156,7 +156,7 @@ const CreateReservationFromAgency = async (req, res) => {
 
     const durationReservation = await daysBetween(req.body.endDate, req.body.startDate);
     let newReservationDetail = {
-        userID: customer._id,
+        userID: customer[0]._id,
         carID: req.body.carID,
         startDate: req.body.startDate,
         endDate: req.body.endDate,
