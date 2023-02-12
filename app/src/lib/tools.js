@@ -129,7 +129,7 @@ async function createFakeAgents() {
             password: await hashPassword("123456")
         });
     
-        listAgent = [agent1, agent2, agent3];
+        let listAgent = [agent1, agent2, agent3];
     
         for (let i = 0; i < listAgent.length; i++) {
             await listAgent[i].save();
@@ -184,7 +184,7 @@ async function createFakeUsers() {
             country : "France"
         });
         
-        listUser = [User1, User2, User3];
+        let listUser = [User1, User2, User3];
 
         for (let i = 0; i < listUser.length; i++) {
             await listUser[i].save();
@@ -288,7 +288,7 @@ async function createFakeCars() {
             available: true
         });
 
-        listCars = [Car1, Car2, Car3, Car4, Car5, Car6, Car7, Car8, Car9, Car10];
+        let listCars = [Car1, Car2, Car3, Car4, Car5, Car6, Car7, Car8, Car9, Car10];
         for (let i = 0; i < listCars.length; i++) {
             await listCars[i].save();
         }
