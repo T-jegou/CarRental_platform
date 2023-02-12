@@ -28,18 +28,7 @@ app.use(errorHandlerMiddleware)
 // Add router handler
 addRoutes(app)
 
-// // Delete all agents
-// await deleteAllAgents();
-
-// // Delete all users$
-// await deleteAllUsers();
-
-// // Init a fake agents
-// await createFakeAgents();
-
-// // Init fake Users
-// await createFakeUsers();
-
+// Start the server
 app.listen(PORT, () => {
     logger.info(`agent service listening on port ${PORT}`);
 })

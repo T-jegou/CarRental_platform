@@ -52,12 +52,11 @@ describe('Register Agent', () => {
         newAgent = new Agent(newAgent);
         await newAgent.save();
 
-        retrieveAgent = await Agent.findOne({email: "agent1@test.com"});
+        let retrieveAgent = await Agent.findOne({email: "agent1@test.com"});
         assert.equal(retrieveAgent.name, "John");
     });
 
 });
-
 
 describe('Add car to catalog', () => {
     beforeEach(async () =>{
@@ -126,21 +125,21 @@ describe('Add car to catalog', () => {
    
   });
 
-//   it('If client is registered', async () => {
+  it('If client is registered', async () => {
 
-//     const response = await request(app)
-//       .get('/api/customer/isClient')
-//       .send({
-//         email: "agent1@car.com",
-//         password: "123456",
-//         customerEmail: "agent1@car.com"
+    const response = await request(app)
+      .get('/api/customer/isClient')
+      .send({
+        email: "agent1@car.com",
+        password: "123456",
+        customerEmail: "john@test.com"
     
-//     }).set('Accept', 'application/json');
+    }).set('Accept', 'application/json');
   
 
-//     expect(response.statusCode).to.equal(201);
+    expect(response.statusCode).to.equal(201);
    
-//   });
+  });
 
   it('if car is available', async () => {
     const response_car = await request(app)

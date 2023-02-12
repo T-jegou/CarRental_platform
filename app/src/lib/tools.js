@@ -24,9 +24,9 @@ async function validatePassword(password, hashedPassword) {
 
 async function isAgentExistAndPasswordCorrect(agentEmail, password) {
   try {
-    let agent = await Agent.findOne({email: agentEmail});
+    let agent = await Agent.find({email: agentEmail.toString()});
     if (typeof agent === "object") {
-      if (await validatePassword(password, agent.password)) {
+      if (await validatePassword(password, agent[0].password)) {
         return agent;
       } else {
         return false
@@ -67,8 +67,8 @@ async function isCarIdValid(carID) {
   }
 
   async function isCarAvailable(carId, startDate, endDate) {
-    newResStartDate = new Date(startDate);
-    newResEndDate = new Date(endDate);
+    let newResStartDate = new Date(startDate);
+    let newResEndDate = new Date(endDate);
 
     try {
       let car = await Car.findById(carId);
@@ -80,7 +80,7 @@ async function isCarIdValid(carID) {
             return false;
         }
 
-        let reservation = await Reservation.find({carID: carId});
+        let reservation = await Reservation.find({carID: carId.toString()});
         if (reservation.length === 0) {
             return true;
         }
@@ -129,7 +129,7 @@ async function createFakeAgents() {
             password: await hashPassword("123456")
         });
     
-        listAgent = [agent1, agent2, agent3];
+        let listAgent = [agent1, agent2, agent3];
     
         for (let i = 0; i < listAgent.length; i++) {
             await listAgent[i].save();
@@ -184,7 +184,7 @@ async function createFakeUsers() {
             country : "France"
         });
         
-        listUser = [User1, User2, User3];
+        let listUser = [User1, User2, User3];
 
         for (let i = 0; i < listUser.length; i++) {
             await listUser[i].save();
@@ -288,7 +288,7 @@ async function createFakeCars() {
             available: true
         });
 
-        listCars = [Car1, Car2, Car3, Car4, Car5, Car6, Car7, Car8, Car9, Car10];
+        let listCars = [Car1, Car2, Car3, Car4, Car5, Car6, Car7, Car8, Car9, Car10];
         for (let i = 0; i < listCars.length; i++) {
             await listCars[i].save();
         }

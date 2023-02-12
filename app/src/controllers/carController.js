@@ -6,6 +6,7 @@ const {carSchema} = require('../models/Car');
 const {userSchema} = require('../models/User');
 const {reservationSchema} = require('../models/Reservation');
 const { type } = require('os');
+const { resolve } = require('path');
 
 const Car = mongoose.model('Car', carSchema);
 const Customer = mongoose.model('User', userSchema);
@@ -66,13 +67,13 @@ const CheckIfClientIsRegistred = async (req, res) => {
     }
 
     try {
-        const agent = await isAgentExistAndPasswordCorrect(req.body.email, req.body.password);
+        const agent = isAgentExistAndPasswordCorrect(req.body.email, req.body.password);
         if (typeof agent === "object") {
-            customerEmail = req.body.customerEmail;
+            let customerEmail = req.body.customerEmail;
             try {
-                let customer = await Customer.findOne({email: customerEmail});
+                let customer = await Customer.find({email: customerEmail.toString()});
                 if (customer) {
-                    res.status(200).json(customer);
+                    res.status(201).json(customer);
                 } else {
                     res.status(401).json("Cannot find customer account with this email");
                 }
@@ -96,7 +97,7 @@ const getCatalog = async (req, res) => {
     }
 
     try {
-        const agent = await isAgentExistAndPasswordCorrect(req.body.email, req.body.password);
+        const agent = isAgentExistAndPasswordCorrect(req.body.email, req.body.password);
         if (typeof agent === "object") {
             try {
                 let cars = await Car.find();
@@ -134,12 +135,22 @@ const CreateReservationFromAgency = async (req, res) => {
         return false;
     }
 
-    const customer = await Customer.findOne({email: req.body.customerEmail});
+    const customers = new Promise((resolve, reject) => { 
+        Customer.find({email: req.body.customerEmail.toString()}, (err, customers) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(customers);
+            }
+        });
+    });
+
+    let customer = await customers;
     if (customer === null) {
         res.status(401).json("Cannot find this customer");
         return false;
     }
-   
+    
     const car = await isCarIdValid(req.body.carID);
     if (car === null) {
         res.status(401).json("Cannot find this car");
@@ -156,7 +167,7 @@ const CreateReservationFromAgency = async (req, res) => {
 
     const durationReservation = await daysBetween(req.body.endDate, req.body.startDate);
     let newReservationDetail = {
-        userID: customer._id,
+        userID: customer[0]._id,
         carID: req.body.carID,
         startDate: req.body.startDate,
         endDate: req.body.endDate,

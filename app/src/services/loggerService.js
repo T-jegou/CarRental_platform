@@ -1,6 +1,6 @@
 var winston = require('winston');
 
-logLevels = {
+var logLevels = {
     fatal: 0,
     crit: 1,
     warn: 2,
