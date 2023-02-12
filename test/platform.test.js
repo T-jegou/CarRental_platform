@@ -58,7 +58,6 @@ describe('Register Agent', () => {
 
 });
 
-
 describe('Add car to catalog', () => {
     beforeEach(async () =>{
         await deleteAllAgents();
@@ -126,21 +125,21 @@ describe('Add car to catalog', () => {
    
   });
 
-//   it('If client is registered', async () => {
+  it('If client is registered', async () => {
 
-//     const response = await request(app)
-//       .get('/api/customer/isClient')
-//       .send({
-//         email: "agent1@car.com",
-//         password: "123456",
-//         customerEmail: "agent1@car.com"
+    const response = await request(app)
+      .get('/api/customer/isClient')
+      .send({
+        email: "agent1@car.com",
+        password: "123456",
+        customerEmail: "john@test.com"
     
-//     }).set('Accept', 'application/json');
+    }).set('Accept', 'application/json');
   
 
-//     expect(response.statusCode).to.equal(201);
+    expect(response.statusCode).to.equal(201);
    
-//   });
+  });
 
   it('if car is available', async () => {
     const response_car = await request(app)
