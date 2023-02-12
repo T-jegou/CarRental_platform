@@ -71,7 +71,7 @@ const CheckIfClientIsRegistred = async (req, res) => {
         if (typeof agent === "object") {
             let customerEmail = req.body.customerEmail;
             try {
-                let customer = await Customer.find({email: {$eq: customerEmail}});
+                let customer = await Customer.find({email: customerEmail.toString()});
                 if (customer) {
                     res.status(201).json(customer);
                 } else {
