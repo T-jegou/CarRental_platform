@@ -67,8 +67,8 @@ async function isCarIdValid(carID) {
   }
 
   async function isCarAvailable(carId, startDate, endDate) {
-    newResStartDate = new Date(startDate);
-    newResEndDate = new Date(endDate);
+    let newResStartDate = new Date(startDate);
+    let newResEndDate = new Date(endDate);
 
     try {
       let car = await Car.findById(carId);
