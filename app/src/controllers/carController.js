@@ -68,7 +68,7 @@ const CheckIfClientIsRegistred = async (req, res) => {
     try {
         const agent = await isAgentExistAndPasswordCorrect(req.body.email, req.body.password);
         if (typeof agent === "object") {
-            customerEmail = req.body.customerEmail;
+            let customerEmail = req.body.customerEmail;
             try {
                 let customer = await Customer.findOne({email: customerEmail});
                 if (customer) {
