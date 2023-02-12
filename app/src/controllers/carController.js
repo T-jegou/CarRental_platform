@@ -6,6 +6,7 @@ const {carSchema} = require('../models/Car');
 const {userSchema} = require('../models/User');
 const {reservationSchema} = require('../models/Reservation');
 const { type } = require('os');
+const { resolve } = require('path');
 
 const Car = mongoose.model('Car', carSchema);
 const Customer = mongoose.model('User', userSchema);
@@ -134,12 +135,22 @@ const CreateReservationFromAgency = async (req, res) => {
         return false;
     }
 
-    const customer = await Customer.find({email: req.body.customerEmail});
+    const customers = new Promise((resolve, reject) => { 
+        Customer.find({email: req.body.customerEmail}, (err, customers) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(customers);
+            }
+        });
+    });
+
+    let customer = await customers;
     if (customer === null) {
         res.status(401).json("Cannot find this customer");
         return false;
     }
-   
+    
     const car = await isCarIdValid(req.body.carID);
     if (car === null) {
         res.status(401).json("Cannot find this car");
