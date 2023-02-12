@@ -96,7 +96,7 @@ const getCatalog = async (req, res) => {
     }
 
     try {
-        const agent = await isAgentExistAndPasswordCorrect(req.body.email, req.body.password);
+        const agent = isAgentExistAndPasswordCorrect(req.body.email, req.body.password);
         if (typeof agent === "object") {
             try {
                 let cars = await Car.find();
