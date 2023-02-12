@@ -24,10 +24,10 @@ async function validatePassword(password, hashedPassword) {
 
 async function isAgentExistAndPasswordCorrect(agentEmail, password) {
   try {
-    let agent = await Agent.findOne({email: agentEmail});
+    let agent = await Agent.find({email: {$eq: agentEmail}});
     if (typeof agent === "object") {
-      if (await validatePassword(password, agent.password)) {
-        return agent;
+      if (await validatePassword(password, agent[0].password)) {
+        return agent[0];
       } else {
         return false
       }
