@@ -71,7 +71,7 @@ const CheckIfClientIsRegistred = async (req, res) => {
         if (typeof agent === "object") {
             let customerEmail = req.body.customerEmail;
             try {
-                let customer = await Customer.find({email: customerEmail});
+                let customer = await Customer.find({email: {$eq: customerEmail}});
                 if (customer) {
                     res.status(201).json(customer);
                 } else {
@@ -136,7 +136,7 @@ const CreateReservationFromAgency = async (req, res) => {
     }
 
     const customers = new Promise((resolve, reject) => { 
-        Customer.find({email: req.body.customerEmail}, (err, customers) => {
+        Customer.find({email: req.body.customerEmail.toString()}, (err, customers) => {
             if (err) {
                 reject(err);
             } else {
