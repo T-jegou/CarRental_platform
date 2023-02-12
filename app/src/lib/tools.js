@@ -24,7 +24,7 @@ async function validatePassword(password, hashedPassword) {
 
 async function isAgentExistAndPasswordCorrect(agentEmail, password) {
   try {
-    let agent = await Agent.find({email: {$eq: agentEmail}});
+    let agent = await Agent.find({email: agentEmail.toString()});
     if (typeof agent === "object") {
       if (await validatePassword(password, agent[0].password)) {
         return agent;
