@@ -39,14 +39,12 @@ jobs:
 
     - name: Fetch tag, update tag and build image
       id: get-image-tag
-      env:
-        NEW_TAG: ${{ env.NEW_TAG }}
       run: |
         OLD_TAG=$(aws ecr describe-images --repository-name $ECR_REPOSITORY_NAME --query 'sort_by(imageDetails,&imagePushedAt)[-1].imageTags[0]' --output text)
         IFS='.' read -r MAJOR MINOR <<< "$OLD_TAG"
         MINOR=$((MINOR + 1))
         NEW_TAG="${MAJOR}.${MINOR}"
-        echo $NEW_TAG
+        echo ::set-output name=NEW_TAG::$NEW_TAG
 
     - name: Build image
       env:
