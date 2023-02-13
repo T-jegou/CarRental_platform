@@ -1,28 +1,28 @@
 //During the test the env variable is set to test
 process.env.NODE_ENV = 'test';
 let mongoose = require("mongoose");
-const {reservationSchema} = require('../app/src/models/Reservation');
+const {reservationSchema} = require('../app/models/Reservation');
 
 let Reservation = mongoose.model('Reservation', reservationSchema);
-const {carSchema} = require('../app/src/models/Car');
+const {carSchema} = require('../app/models/Car');
 let Car = mongoose.model('Car', carSchema);
-const {userSchema} = require('../app/src/models/User');
+const {userSchema} = require('../app/models/User');
 let User = mongoose.model('User', userSchema);
-const {agentSchema} = require('../app/src/models/Agent');
+const {agentSchema} = require('../app/models/Agent');
 let Agent = mongoose.model('Agent', agentSchema);
 
 const request = require('supertest');
 
-const {hashPassword} = require ('../app/src/lib/tools');
+const {hashPassword} = require ('../app/lib/tools');
 
-const { createFakeCars, createFakeAgents, deleteAllCars, deleteAllAgents, createFakeUsers, deleteAllUsers } = require('../app/src/lib/tools');
+const { createFakeCars, createFakeAgents, deleteAllCars, deleteAllAgents, createFakeUsers, deleteAllUsers } = require('../app/lib/tools');
 const expect = require('chai').expect;
 
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 
 
-const { app } = require('../app/src/app');
+const { app } = require('../app/app');
 
 
 var assert = require('assert');

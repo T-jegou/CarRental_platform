@@ -1,13 +1,13 @@
 {
-  "name": "agent-service",
+  "name": "car-platform-api",
   "version": "1.0.0",
   "description": "Agent platform service for car rental agency",
   "main": "index.js",
   "scripts": {
     "test": "NODE_ENV=test mocha --recursive test/ --exit --async-stack-traces --full-trace",
     "lint": "eslint .",
-    "start": "node app/src/app.js localhost 4000",
-    "dev": "NODE_ENV=test nodemon app/src/app.js localhost 4000"
+    "start": "node app/app.js localhost 4000",
+    "dev": "NODE_ENV=test nodemon app/app.js localhost 4000"
   },
   "author": "T-jegou",
   "license": "ISC",
