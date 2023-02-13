@@ -1,0 +1,76 @@
+name: Create a new release
+
+on:
+  push:
+    branches:
+      - "dev"
+      - "main"
+env:
+  IMAGE_NAME: car_platform_api
+  ECR_REPOSITORY_NAME: car_platform_repository
+
+
+jobs:
+
+  build_image_and_push:
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ secrets.AWS_ROLE_WEB_IDENTITY_TO_ASSUME }}
+        aws-region: eu-west-1
+        role-session-name: AWS
+        role-duration-seconds: 900
+
+    - name: Setup NodeJS
+      uses: actions/setup-node@v3
+      with:
+          node-version: '16'
+
+    - name: Fetch tag, update tag and build image
+      id: get-image-tag
+      run: |
+        OLD_TAG=$(aws ecr describe-images --repository-name $ECR_REPOSITORY_NAME --query 'sort_by(imageDetails,&imagePushedAt)[-1].imageTags[0]' --output text)
+        IFS='.' read -r MAJOR MINOR <<< "$OLD_TAG"
+        MINOR=$((MINOR + 1))
+        NEW_TAG="${MAJOR}.${MINOR}"
+        echo ::set-output name=NEW_TAG::$NEW_TAG
+
+    - name: Login to ECR aws registry
+      run: |
+        aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_CAR_PLATFORM_ARN }}
+
+    - name: Build image
+      env:
+        NEW_TAG: ${{ steps.get-image-tag.outputs.NEW_TAG }}
+      run : |
+        docker build . --file Dockerfile --tag $IMAGE_NAME:$NEW_TAG
+    
+    - name: Tag new release
+      env:
+          NEW_TAG: ${{ steps.get-image-tag.outputs.NEW_TAG }}
+      run: |
+        docker tag $IMAGE_NAME:$NEW_TAG ${{ secrets.AWS_ECR_CAR_PLATFORM_ARN }}:$NEW_TAG
+        docker images
+
+    - name: Push new release to ECR
+      env:
+        NEW_TAG: ${{ steps.get-image-tag.outputs.NEW_TAG }}
+      run: |
+        docker push ${{ secrets.AWS_ECR_CAR_PLATFORM_ARN }}:$NEW_TAG
+    
+    - name: Start ECR image vulnerability scan
+      env:
+        NEW_TAG: ${{ steps.get-image-tag.outputs.NEW_TAG }}
+      run: |
+        aws ecr start-image-scan --repository-name $ECR_REPOSITORY_NAME --image-id imageTag=$NEW_TAG

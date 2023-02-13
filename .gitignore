@@ -35,16 +35,6 @@ lerna-debug.log*
 
 # Docker 
 docker
-# Package-lock.json
-# package-lock.json is a security risk when used as an application dependency.
-# It exposes your code to attacks from malicious packages.
-# More details here: https://snyk.io/blog/malicious-code-found-in-npm-package-lock-files/
-# Recommendation: don't commit package-lock.json to your repository.
-package-lock.json
-
-
-
-# Docker 
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
