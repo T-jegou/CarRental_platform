@@ -2,15 +2,29 @@ const mongoose = require('mongoose');
 const { logger } = require('./loggerService')
 require('dotenv').config()
 
-if (!process.env.MONGO_HOST) throw new Error("HOST is not defined")
-if (!process.env.MONGO_PORT) throw new Error("PORT is not defined")
-if (!process.env.MONGO_INITDB_USERNAME) throw new Error("USERNAME is not defined")
-if (!process.env.MONGO_INITDB_PASSWORD) throw new Error("PASSWORD is not defined")
-if (!process.env.MONGO_INITDB_DATABASE) throw new Error("DATABASE is not defined")
+// Check if NODE_ENV is not set to production
+if (process.env.NODE_ENV !== 'production') {
+    console.log("NODE_ENV is not set to production")
+    if (!process.env.MONGO_HOST) throw new Error("HOST is not defined")
+    if (!process.env.MONGO_PORT) throw new Error("PORT is not defined")
+    if (!process.env.MONGO_INITDB_USERNAME) throw new Error("USERNAME is not defined")
+    if (!process.env.MONGO_INITDB_PASSWORD) throw new Error("PASSWORD is not defined")
+    if (!process.env.MONGO_INITDB_DATABASE) throw new Error("DATABASE is not defined")
+} else {
+    console.log("NODE_ENV is set to production")
+    if (!process.env.ATLAS_MONGO_HOST) throw new Error("HOST is not defined")
+    if (!process.env.ATLAS_MONGO_USERNAME) throw new Error("USERNAME is not defined")
+    if (!process.env.ATLAS_MONGO_PASSWORD) throw new Error("PASSWORD is not defined")
+    if (!process.env.ATLAS_MONGO_DATABASE) throw new Error("DATABASE is not defined")
+}
 
 
-const MONGO_URI = `mongodb://${process.env.MONGO_INITDB_USERNAME}:${process.env.MONGO_INITDB_PASSWORD}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_INITDB_DATABASE}`;
 
+// Set the connection string to the MongoDB database if NODE_ENV is not set to production
+// Otherwise, set the connection string to the AWS DocumentDB database
+const MONGO_URI = process.env.NODE_ENV !== 'production' ? 
+    `mongodb://${process.env.MONGO_INITDB_USERNAME}:${process.env.MONGO_INITDB_PASSWORD}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_INITDB_DATABASE}` :
+    `mongodb+srv://${process.env.ATLAS_MONGO_USERNAME}:${process.env.ATLAS_MONGO_PASSWORD}@${process.env.ATLAS_MONGO_HOST}/${process.env.ATLAS_MONGO_DATABASE}`;
 
 /**
  * Connect to MongoDB wit Mongoose
