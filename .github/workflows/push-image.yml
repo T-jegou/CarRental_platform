@@ -32,6 +32,11 @@ jobs:
         role-session-name: AWS
         role-duration-seconds: 900
 
+    - name: Setup NodeJS
+      uses: actions/setup-node@v3
+      with:
+          node-version: '16'
+          
     - name: Fetch tag, update tag and build image
       run: |
         OLD_TAG=$(aws ecr describe-images --repository-name $ECR_REPOSITORY_NAME --query 'sort_by(imageDetails,&imagePushedAt)[-1].imageTags[0]' --output text)

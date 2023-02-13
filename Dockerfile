@@ -6,7 +6,8 @@ USER node
 WORKDIR /home/node/app
 COPY --chown=node:node /package.json /package-lock.json /home/node/app/
 COPY --chown=node:node /src/ /home/node/app/src/
-RUN npm ci --omit=dev 
+USER root
+RUN sudo npm ci --omit=dev 
 
 FROM --platform=linux/amd64 node:19-alpine
 
@@ -18,7 +19,9 @@ EXPOSE 4000
 
 COPY --from=build --chown=node:node /home/node/app/src/  /home/node/app/src/
 COPY --from=build --chown=node:node /home/node/app/package.json  /home/node/app/package.json /home/node/app/
-RUN npm ci --omit=dev
+USER root
+RUN sudo npm ci --omit=dev
 ENV NODE_ENV=production
 
+USER node
 CMD ["node", "src/app.js"]
