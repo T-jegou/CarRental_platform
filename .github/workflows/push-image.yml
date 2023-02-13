@@ -38,8 +38,9 @@ jobs:
         IFS='.' read -r MAJOR MINOR <<< "$OLD_TAG"
         MINOR=$((MINOR + 1))
         NEW_TAG="${MAJOR}.${MINOR}"
+        echo $NEW_TAG
         docker build --file Dockerfile --tag ${{ secrets.AWS_ECR_CAR_PLATFORM_ARN }}/$NEW_TAG .
-        
+
     - name: login to ECR aws registry
       run: |
         aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_CAR_PLATFORM_ARN }}
