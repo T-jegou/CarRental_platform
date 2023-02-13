@@ -61,7 +61,7 @@ jobs:
       env:
         NEW_TAG: ${{ steps.get-image-tag.outputs.NEW_TAG }}
       run: |
-        docker push ${{ secrets.AWS_ECR_CAR_PLATFORM_ARN }}/$ECR_REPOSITORY_NAME:$NEW_TAG
+        docker push ${{ secrets.AWS_ECR_CAR_PLATFORM_ARN }}/$NEW_TAG
     
     - name: Start ECR image vulnerability scan
       env:
