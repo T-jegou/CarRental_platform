@@ -52,6 +52,7 @@ jobs:
       env:
         NEW_TAG: ${{ steps.get-image-tag.outputs.NEW_TAG }}
       run : |
+        echo $NEW_TAG
         docker build --file Dockerfile --tag ${{ secrets.AWS_ECR_CAR_PLATFORM_ARN }}/$NEW_TAG .
 
     - name: login to ECR aws registry
