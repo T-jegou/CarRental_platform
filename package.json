@@ -6,8 +6,8 @@
   "scripts": {
     "test": "NODE_ENV=test mocha --recursive test/ --exit --async-stack-traces --full-trace",
     "lint": "eslint .",
-    "start": "node app/app.js localhost 4000",
-    "dev": "NODE_ENV=test nodemon app/app.js localhost 4000"
+    "start": "node src/app.js localhost 4000",
+    "dev": "NODE_ENV=test nodemon src/app.js localhost 4000"
   },
   "author": "T-jegou",
   "license": "ISC",
