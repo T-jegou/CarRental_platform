@@ -10,6 +10,8 @@ RUN npm install
 
 FROM --platform=linux/amd64 node:19-alpine
 
+ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
+
 USER node
 WORKDIR /home/node/app
 EXPOSE 4000
