@@ -1,0 +1,55 @@
+name: Create a new release
+
+on:
+  push:
+    branches:
+      - "dev"
+      - "main"
+env:
+  IMAGE_NAME: car_platform_api
+  ECR_REPOSITORY_NAME: car_platform_repository
+
+
+jobs:
+
+  build_image_and_push:
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ secrets.AWS_ROLE_WEB_IDENTITY_TO_ASSUME }}
+        aws-region: eu-west-1
+        role-session-name: AWS
+        role-duration-seconds: 900
+
+    - name: Fetch last tag and create the new one +1 minor version
+      run: |
+        OLD_TAG=$(aws ecr describe-images --repository-name $ECR_REPOSITORY_NAME --query 'sort_by(imageDetails,&imagePushedAt)[-1].imageTags[0]' --output text)
+        IFS='.' read -r MAJOR MINOR <<< "$OLD_TAG"
+        MINOR=$((MINOR + 1))
+        NEW_TAG="${MAJOR}.${MINOR}"
+      
+    - name: Build the Docker image and tag
+      run: docker build --file Dockerfile --tag ${{ secrets.AWS_ECR_CAR_PLATFORM_ARN }}/$NEW_TAG .
+
+    - name: login to ECR aws registry
+      run: |
+        aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_CAR_PLATFORM_ARN }}
+    
+    - name: Push new release to ECR
+      run: |
+        docker push ${{ secrets.AWS_ECR_CAR_PLATFORM_ARN }}/:$NEW_TAG
+    
+    - name: Start ECR image vulnerability scan
+      run: |
+        aws ecr start-image-scan --repository-name $ECR_REPOSITORY_NAME --image-id imageTag=$NEW_TAG

@@ -1,4 +1,4 @@
-FROM node:19 AS build
+FROM --platform=linux/amd64 node:19 AS build
 
 USER node
 WORKDIR /home/node/app
@@ -6,7 +6,7 @@ COPY --chown=node:node /package.json /package-lock.json /home/node/app/
 COPY --chown=node:node /src/ /home/node/app/src/
 RUN npm install
 
-FROM node:19-alpine
+FROM --platform=linux/amd64 node:19-alpine
 
 USER node
 WORKDIR /home/node/app
