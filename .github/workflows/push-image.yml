@@ -65,12 +65,24 @@ jobs:
 
     - name: Push new release to ECR
       env:
-            NEW_TAG: ${{ steps.get-image-tag.outputs.NEW_TAG }}
+        NEW_TAG: ${{ steps.get-image-tag.outputs.NEW_TAG }}
       run: |
         docker push ${{ secrets.AWS_ECR_CAR_PLATFORM_ARN }}:$NEW_TAG
     
     - name: Start ECR image vulnerability scan
       env:
-          NEW_TAG: ${{ steps.get-image-tag.outputs.NEW_TAG }}
+        NEW_TAG: ${{ steps.get-image-tag.outputs.NEW_TAG }}
       run: |
         aws ecr start-image-scan --repository-name $ECR_REPOSITORY_NAME --image-id imageTag=$NEW_TAG
+    
+    - uses: "marvinpinto/action-automatic-releases@latest"
+      env:
+        NEW_TAG: ${{ steps.get-image-tag.outputs.NEW_TAG }}
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: $NEW_TAG
+        prerelease: true
+        title: "Development Build"
+        files: |
+          README.md
+          /src/*
