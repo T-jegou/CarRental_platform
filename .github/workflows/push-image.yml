@@ -36,14 +36,22 @@ jobs:
       uses: actions/setup-node@v3
       with:
           node-version: '16'
-          
+
     - name: Fetch tag, update tag and build image
+      id: get-image-tag
+      env:
+        NEW_TAG: ${{ env.NEW_TAG }}
       run: |
         OLD_TAG=$(aws ecr describe-images --repository-name $ECR_REPOSITORY_NAME --query 'sort_by(imageDetails,&imagePushedAt)[-1].imageTags[0]' --output text)
         IFS='.' read -r MAJOR MINOR <<< "$OLD_TAG"
         MINOR=$((MINOR + 1))
         NEW_TAG="${MAJOR}.${MINOR}"
         echo $NEW_TAG
+
+    - name: Build image
+      env:
+        NEW_TAG: ${{ steps.get-image-tag.outputs.NEW_TAG }}
+      run : |
         docker build --file Dockerfile --tag ${{ secrets.AWS_ECR_CAR_PLATFORM_ARN }}/$NEW_TAG .
 
     - name: login to ECR aws registry
@@ -51,9 +59,13 @@ jobs:
         aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_CAR_PLATFORM_ARN }}
     
     - name: Push new release to ECR
+      env:
+        NEW_TAG: ${{ steps.get-image-tag.outputs.NEW_TAG }}
       run: |
-        docker push ${{ secrets.AWS_ECR_CAR_PLATFORM_ARN }}/:$NEW_TAG
+        docker push ${{ secrets.AWS_ECR_CAR_PLATFORM_ARN }}/$ECR_REPOSITORY_NAME:$NEW_TAG
     
     - name: Start ECR image vulnerability scan
+      env:
+          NEW_TAG: ${{ steps.get-image-tag.outputs.NEW_TAG }}
       run: |
         aws ecr start-image-scan --repository-name $ECR_REPOSITORY_NAME --image-id imageTag=$NEW_TAG
