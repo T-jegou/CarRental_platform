@@ -30,13 +30,6 @@ jobs:
       # terraform_version: 0.13.0
         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-    - name: Build ARN of the latest image 
-      id: getImageARN
-      run: |
-        LAST_TAG=$(aws ecr describe-images --repository-name $ECR_REPOSITORY_NAME --query 'sort_by(imageDetails,&imagePushedAt)[-1].imageTags[0]' --output text)
-        IMAGE_ARN="${{ secrets.AWS_ECR_CAR_PLATFORM_ARN }}:$NEW_TAG"
-        echo ::set-output name=IMAGE_ARN::$IMAGE_ARN
-
     - name: Terraform Format
       id: fmt
       run: terraform fmt -check
@@ -116,14 +109,9 @@ jobs:
 
     # Apply modif when PR is closed or when push directly on main
     - name: Terraform Apply (prod)
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      if: ${{ github.event.workflow_run.conclusion == 'success' }}
       run: terraform apply -auto-approve -input=false
     
-    # Apply modif when PR is closed on when push directly on dev
-    - name: Terraform Apply (preprod)
-      if: github.ref == 'refs/heads/dev' && github.event_name == 'push'
-      run: terraform apply -auto-approve -input=false
-
     
 
     
