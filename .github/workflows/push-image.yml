@@ -64,6 +64,8 @@ jobs:
         docker images
 
     - name: Tag as latest release
+      env:
+        NEW_TAG: ${{ steps.get-image-tag.outputs.NEW_TAG }}
       run: |
         docker tag $IMAGE_NAME:$NEW_TAG ${{ secrets.AWS_ECR_CAR_PLATFORM_ARN }}:latest
         docker images
