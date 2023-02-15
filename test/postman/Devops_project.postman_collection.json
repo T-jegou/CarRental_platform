@@ -2,13 +2,31 @@
 	"info": {
 		"_postman_id": "bc6964fa-a7e4-4ef1-94b3-1c00a518d51f",
 		"name": "Devops_project",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
 		"_exporter_id": "17999808"
 	},
 	"item": [
 		{
-			"name": "agent-service",
+			"name": "CAR_PLATFORM_API",
 			"item": [
+				{
+					"name": "Add an agent",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"testAgent@car.com\",\n    \"password\": \"\",\n    \"name\": \"John\",\n    \"surname\": \"Doe\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "CarRental-prod-ALB-643835154.eu-west-1.elb.amazonaws.com:4000/api/car/register"
+					},
+					"response": []
+				},
 				{
 					"name": "Add new car to catalog",
 					"request": {
@@ -16,57 +34,14 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"agent1@car.com\",\n    \"password\": \"123456\",\n    \"brand\": \"Citroen\",\n    \"model\": \"C4\",\n    \"numberOfSeat\": \"5\",\n    \"pricePerDay\": \"80\",\n    \"available\": true\n\n}",
+							"raw": "{\n    \"email\": \"testAgent@car.com\",\n    \"password\": \"\",\n    \"brand\": \"Audi\",\n    \"model\": \"A5\",\n    \"numberOfSeat\": \"5\",\n    \"pricePerDay\": \"80\",\n    \"available\": true\n\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": {
-							"raw": "localhost:4000/api/car/catalog",
-							"host": [
-								"localhost"
-							],
-							"port": "4000",
-							"path": [
-								"api",
-								"car",
-								"catalog"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Check if client is registred",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"agent1@car.com\",\n    \"password\": \"123456\",\n    \"customerEmail\": \"mitra@ez.com\"\n\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:4000/api/customer/isClient",
-							"host": [
-								"localhost"
-							],
-							"port": "4000",
-							"path": [
-								"api",
-								"customer",
-								"isClient"
-							]
-						}
+						"url": "CarRental-prod-ALB-643835154.eu-west-1.elb.amazonaws.com:4000/api/car/catalog"
 					},
 					"response": []
 				},
@@ -77,25 +52,14 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"agent1@car.com\",\n    \"password\": \"123456\",\n    \"carID\" : \"63da2f3e5683291f48a3be1b\",\n    \"customerEmail\": \"john@test.com\",\n    \"startDate\" : \"2020-04-24\",\n    \"endDate\" : \"2020-05-4\",\n    \"paymentStatus\" : \"Paid\" ,\n    \"paymentMethod\" : \"Cash\",\n    \"ReservationStatus\" : \"In progress\"\n}\n",
+							"raw": "{\n    \"email\": \"testAgent@car.com\",\n    \"password\": \"\",\n    \"carID\" : \"63da2f3e5683291f48a3be1b\",\n    \"customerEmail\": \"john@test.com\",\n    \"startDate\" : \"2020-04-24\",\n    \"endDate\" : \"2020-05-4\",\n    \"paymentStatus\" : \"Paid\" ,\n    \"paymentMethod\" : \"Cash\",\n    \"ReservationStatus\" : \"In progress\"\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": {
-							"raw": "localhost:4000/api/car/reservation",
-							"host": [
-								"localhost"
-							],
-							"port": "4000",
-							"path": [
-								"api",
-								"car",
-								"reservation"
-							]
-						}
+						"url": "CarRental-prod-ALB-643835154.eu-west-1.elb.amazonaws.com:4000/api/car/reservation"
 					},
 					"response": []
 				},
@@ -109,25 +73,14 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"agent1@car.com\",\n    \"password\": \"123456\",\n    \"carID\" : \"63da306af96937b2a3966f77\",\n \"startDate\" : \"2022-04-24\",\n    \"endDate\" : \"2022-05-4\"\n}",
+							"raw": "{\n    \"email\": \"testAgent@car.com\",\n    \"password\": \"\",\n    \"carID\" : \"63da306af96937b2a3966f77\",\n    \"startDate\" : \"2022-04-24\",\n    \"endDate\" : \"2022-05-4\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": {
-							"raw": "localhost:4000/api/car/availability",
-							"host": [
-								"localhost"
-							],
-							"port": "4000",
-							"path": [
-								"api",
-								"car",
-								"availability"
-							]
-						}
+						"url": "CarRental-prod-ALB-643835154.eu-west-1.elb.amazonaws.com:4000/api/car/availability"
 					},
 					"response": []
 				},
@@ -141,25 +94,14 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"agent1@car.com\",\n    \"password\": \"123456\"\n}",
+							"raw": "{\n    \"email\": \"testAgent@car.com\",\n    \"password\": \"\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": {
-							"raw": "localhost:4000/api/car/catalog",
-							"host": [
-								"localhost"
-							],
-							"port": "4000",
-							"path": [
-								"api",
-								"car",
-								"catalog"
-							]
-						}
+						"url": "CarRental-prod-ALB-643835154.eu-west-1.elb.amazonaws.com:4000/api/car/catalog"
 					},
 					"response": []
 				}
