@@ -6,6 +6,10 @@ on:
       - main
       - dev
 
+env:
+  IMAGE_NAME: car_platform_api
+  ECR_REPOSITORY_NAME: car_platform_repository
+
 jobs:
   terraform:
     name: 'Terraform'
