@@ -74,3 +74,11 @@ jobs:
         NEW_TAG: ${{ steps.get-image-tag.outputs.NEW_TAG }}
       run: |
         aws ecr start-image-scan --repository-name $ECR_REPOSITORY_NAME --image-id imageTag=$NEW_TAG
+
+
+    
+    - name: Call update infrastructure workflow
+      uses: actions/workflow-dispatch@v2
+      with:
+        workflow: update_infrastructure_and_deploy_app.yml
+        token: ${{ secrets.PERSONAL_TOKEN }}
