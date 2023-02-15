@@ -1,17 +1,18 @@
 const { logger } = require('../services/loggerService');
 const { validationResult } = require('express-validator');
-const { isAgentExistAndPasswordCorrect, isCarIdValid, daysBetween, isCarAvailable } = require('../lib/tools');
+const { isAgentExistAndPasswordCorrect, isCarIdValid, daysBetween, isCarAvailable, hashPassword} = require('../lib/tools');
 const mongoose = require('mongoose');
 const {carSchema} = require('../models/Car');
 const {userSchema} = require('../models/User');
 const {reservationSchema} = require('../models/Reservation');
+const { agentSchema} = require('../models/Agent');
 const { type } = require('os');
 const { resolve } = require('path');
 
 const Car = mongoose.model('Car', carSchema);
 const Customer = mongoose.model('User', userSchema);
 const Reservation = mongoose.model('Reservation', reservationSchema);
-
+const Agent = mongoose.model('Agent', agentSchema);
 
 
 /**
@@ -224,7 +225,43 @@ const isThisCarAvaible = async (req, res) => {
     } catch (err) {
         res.status(500).json("Error while creating new client reservation to database" + err);
     }
-}   
+}
+
+/**
+ * Add a new agent to the database
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Object} - The new agent.
+ */
+const AddNewAgent = async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(400).send({ errors: errors.array() });
+    }
+
+    try {
+        const agent = await isAgentExistAndPasswordCorrect(req.body.email, req.body.password);
+        if (typeof agent === "object") {
+            res.status(401).json("This agent already exist");
+        } else {
+            const newAgent = new Agent(req.body);
+            const hash = await hashPassword(req.body.password);
+            newAgent.password = hash;
+            console.log(newAgent);
+            newAgent.save((err, agent) => {
+                if (err) {
+                    res.status(500).json("Cannot add this new agent : " + err);
+                }
+                else {
+                    res.status(201).json(agent);
+                }
+            });
+        }
+    } catch (err) {
+        res.status(500).json("Error while creating new agent to database" + err);
+    }
+}
 
 
 module.exports = {
@@ -232,5 +269,6 @@ module.exports = {
     CheckIfClientIsRegistred: CheckIfClientIsRegistred,
     CreateReservationFromAgency: CreateReservationFromAgency,
     isThisCarAvaible: isThisCarAvaible,
-    getCatalog: getCatalog
+    getCatalog: getCatalog,
+    AddNewAgent: AddNewAgent
 };

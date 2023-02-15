@@ -39,3 +39,10 @@ exports.validGetCatalog = [
     check('email').exists(),
     check('password').exists(),
 ]
+
+exports.validAddAgent = [
+    check('email').exists(),
+    check('password').exists(),
+    check('name').exists(),
+    check('surname').exists(),
+]

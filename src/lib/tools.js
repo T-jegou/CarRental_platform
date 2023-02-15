@@ -5,7 +5,6 @@ const {reservationSchema} = require('../models/Reservation');
 const {userSchema} = require('../models/User');
 const {carSchema} = require('../models/Car');
 const {logger} = require('../services/loggerService');
-
 const Agent = mongoose.model('Agent', agentSchema);
 const Car = mongoose.model('Car', carSchema);
 const Reservation = mongoose.model('Reservation', reservationSchema);

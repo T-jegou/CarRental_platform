@@ -63,14 +63,35 @@ jobs:
         docker tag $IMAGE_NAME:$NEW_TAG ${{ secrets.AWS_ECR_CAR_PLATFORM_ARN }}:$NEW_TAG
         docker images
 
+    - name: Tag as latest release
+      env:
+        NEW_TAG: ${{ steps.get-image-tag.outputs.NEW_TAG }}
+      run: |
+        docker tag $IMAGE_NAME:$NEW_TAG ${{ secrets.AWS_ECR_CAR_PLATFORM_ARN }}:latest
+        docker images
+
     - name: Push new release to ECR
       env:
         NEW_TAG: ${{ steps.get-image-tag.outputs.NEW_TAG }}
       run: |
         docker push ${{ secrets.AWS_ECR_CAR_PLATFORM_ARN }}:$NEW_TAG
+
+    - name: Push as latest the new release to ECR
+      env:
+        NEW_TAG: ${{ steps.get-image-tag.outputs.NEW_TAG }}
+      run: |
+        docker push ${{ secrets.AWS_ECR_CAR_PLATFORM_ARN }}:latest
     
     - name: Start ECR image vulnerability scan
       env:
         NEW_TAG: ${{ steps.get-image-tag.outputs.NEW_TAG }}
       run: |
         aws ecr start-image-scan --repository-name $ECR_REPOSITORY_NAME --image-id imageTag=$NEW_TAG
+
+
+    
+    - name: Call update infrastructure workflow
+      uses: aurelien-baudet/workflow-dispatch@v2
+      with:
+        workflow: update_infrastructure_and_deploy_app.yml
+        token: ${{ secrets.PERSONAL_TOKEN }}

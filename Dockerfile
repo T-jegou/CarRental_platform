@@ -23,5 +23,9 @@ USER root
 RUN npm install --omit=dev
 ENV NODE_ENV=production
 
+# Install curl
+RUN apk add --no-cache curl
+
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD [ "curl", "-f", "s", "http://localhost:4000/api/healthcheck" ]
 USER node
 CMD ["node", "src/app.js"]
