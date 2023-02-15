@@ -78,7 +78,7 @@ jobs:
 
     
     - name: Call update infrastructure workflow
-      uses: actions/workflow-dispatch@v2
+      uses: aurelien-baudet/workflow-dispatch@v2
       with:
         workflow: update_infrastructure_and_deploy_app.yml
         token: ${{ secrets.PERSONAL_TOKEN }}
