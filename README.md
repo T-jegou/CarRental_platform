@@ -1,8 +1,13 @@
+
+Here's the target infrastructure:
+
+![alt text](/docs/Carplatform_ArchiDiagram.drawio.png "Architecture diagram")
+
 ## Set .env variables
 ```
 cp .env.example .env
 ```
-Fill the all the field of the new .env file with postgres database credential (You can choose the values you want)
+Fill the all the field of the new .env file with mongo database credential (You can choose the values you want)
 
 ## Project setup
 ```
@@ -26,5 +31,5 @@ npm lint
 
 ### Run
 ```
-npm start
+npm run dev
 ```
