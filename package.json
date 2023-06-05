@@ -22,7 +22,7 @@
     "supertest": "^6.3.3",
     "winston": "^3.8.2",
     "bcrypt": "^5.1.0",
-    "eslint": "^8.33.0",
+    "eslint": "^8.42.0",
     "express-validator": "^6.14.2"
   },
   "devDependencies": {
